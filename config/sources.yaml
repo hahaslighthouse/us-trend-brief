@@ -1,35 +1,4 @@
 sources:
-  - name: "WWD"
-    url: "https://wwd.com/feed/"
-    category: "industry"
-    language: "en"
-    enabled: true
-
-  - name: "Business of Fashion"
-    url: "https://www.businessoffashion.com/arc/outboundfeeds/rss/"
-    category: "industry"
-    language: "en"
-    enabled: true
-
-  - name: "Highsnobiety"
-    url: "https://www.highsnobiety.com/feeds/rss"
-    category: "streetwear"
-    language: "en"
-    enabled: true
-
-  - name: "Hypebeast"
-    url: "https://hypebeast.com/feed"
-    category: "streetwear"
-    language: "en"
-    enabled: true
-    allowed_categories:
-      - Fashion
-      - Footwear
-      - Sneakers
-      - Style
-      - Accessories
-      - Luxury
-
   - name: "Refinery29"
     url: "https://www.refinery29.com/rss.xml?site=us"
     category: "womenswear"
@@ -61,9 +30,6 @@ filters:
     - fashion
     - style
     - runway
-    - streetwear
-    - sneaker
-    - sneakers
     - collection
     - designer
     - brand
@@ -75,7 +41,6 @@ filters:
     - wardrobe
     - footwear
     - apparel
-    - menswear
     - womenswear
     - forecast
     - season
@@ -91,9 +56,6 @@ filters:
     - fashion
     - style
     - runway
-    - streetwear
-    - sneaker
-    - sneakers
     - collection
     - designer
     - designers
@@ -106,7 +68,6 @@ filters:
     - wardrobe
     - footwear
     - apparel
-    - menswear
     - womenswear
     - trend
     - trends
@@ -152,10 +113,10 @@ settings:
   # 只保留最近 N 小时的文章
   lookback_hours: 48
   # 每天最多从每个源收录多少篇
-  max_per_source: 15
+  max_per_source: 20
   # 时区
   timezone: "America/New_York"
   # 站点名称
-  site_name: "US Trend Brief"
+  site_name: "US Womenswear Trend Brief"
   # 站点描述
-  site_description: "Daily digest of US fashion trends from industry and streetwear sources."
+  site_description: "A quiet daily zine of US women's fashion, style, and runway signals."

@@ -14,7 +14,7 @@
       <p class="subtitle">{{ site_description }}</p>
       <div class="meta">
         <span class="date">{{ date_str }}</span>
-        <span class="count">{{ articles|length }} articles</span>
+        <span class="count">{{ articles|length }} clips</span>
         <a class="archive-link" href="archive/">Archive</a>
       </div>
     </div>
@@ -22,36 +22,36 @@
 
   <main class="container">
     <section class="hero">
-      <h2>📰 Daily Headline</h2>
+      <h2>Daily Note</h2>
       <p class="headline">{{ summary.headline }}</p>
     </section>
 
     {% if tag_cloud %}
     <section class="tag-cloud-section">
-      <h2>☁️ Trend Cloud</h2>
-      <p class="hint">Click any term to filter articles</p>
+      <h2>Index</h2>
+      <p class="hint">Click a term to filter clippings</p>
       <div class="tag-cloud" id="tagCloud">
         {% for tag in tag_cloud %}
         <button
           class="cloud-tag"
           data-tag="{{ tag.name }}"
           data-count="{{ tag.count }}"
-          style="font-size: {{ 0.85 + tag.weight * 0.7 }}rem;"
-          title="{{ tag.count }} articles"
+          style="font-size: {{ 0.75 + tag.weight * 1.5 }}rem;"
+          title="{{ tag.count }} clippings"
         >{{ tag.name }}</button>
         {% endfor %}
       </div>
       <div class="filter-bar" id="filterBar" hidden>
-        <span>Filtering by: <strong id="filterName"></strong></span>
-        <button class="clear-filter" id="clearFilter">Clear filter</button>
+        <span>Filtered by <strong id="filterName"></strong></span>
+        <button class="clear-filter" id="clearFilter">Clear</button>
       </div>
     </section>
     {% endif %}
 
     {% if summary.trends %}
-    <section class="trends">
-      <h2>🔥 Key Trends</h2>
-      <div class="trend-grid">
+    <section>
+      <h2>Signals</h2>
+      <div class="trends">
         {% for trend in summary.trends %}
         <article class="trend-card">
           <h3>{{ trend.name }}</h3>
@@ -70,12 +70,12 @@
     {% for category, items in groups.items() %}
     <section class="category-section" id="{{ category }}" data-category="{{ category }}">
       <h2>{{ category_names.get(category, category.title()) }}</h2>
-      <div class="article-grid">
+      <div class="article-list">
         {% for a in items %}
         <article class="article-card" data-tags="{{ a.tags | join(',') }}">
           {% if a.image_url %}
           <a href="{{ a.link | safe }}" target="_blank" rel="noopener" class="thumb">
-            <img src="{{ a.image_url | safe }}" alt="{{ a.title }}" loading="lazy">
+            <img src="{{ a.image_url | safe }}" alt="" loading="lazy">
           </a>
           {% endif %}
           <div class="card-body">
@@ -94,6 +94,7 @@
         </article>
         {% endfor %}
       </div>
+      <div class="no-results" id="noResults-{{ category }}" hidden>No clippings match this filter.</div>
     </section>
     {% endfor %}
   </main>
@@ -113,35 +114,58 @@
       const sections = document.querySelectorAll('.category-section');
       let currentTag = null;
 
+      function updateActiveTag(tag) {
+        document.querySelectorAll('.cloud-tag').forEach(btn => {
+          btn.classList.toggle('active', btn.dataset.tag === tag);
+        });
+        document.querySelectorAll('.article-card .tag').forEach(el => {
+          el.classList.toggle('active', el.dataset.tag === tag);
+        });
+      }
+
       function setFilter(tag) {
         currentTag = tag;
         filterName.textContent = tag;
         filterBar.hidden = false;
+        updateActiveTag(tag);
 
+        let totalVisible = 0;
         sections.forEach(section => {
           const cards = section.querySelectorAll('.article-card');
+          const noResults = section.querySelector('.no-results');
           let visibleCount = 0;
           cards.forEach(card => {
             const tags = (card.dataset.tags || '').split(',').filter(Boolean);
             const match = tags.includes(tag);
-            card.hidden = !match;
+            card.classList.toggle('hidden-by-filter', !match);
             if (match) visibleCount++;
           });
           section.hidden = visibleCount === 0;
+          if (noResults) noResults.hidden = visibleCount > 0;
+          totalVisible += visibleCount;
         });
 
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (totalVisible > 0) {
+          const firstVisible = document.querySelector('.article-card:not(.hidden-by-filter)');
+          if (firstVisible) {
+            firstVisible.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
       }
 
       function clear() {
         currentTag = null;
         filterBar.hidden = true;
+        updateActiveTag(null);
         sections.forEach(section => {
           section.hidden = false;
           section.querySelectorAll('.article-card').forEach(card => {
-            card.hidden = false;
+            card.classList.remove('hidden-by-filter');
           });
+          const noResults = section.querySelector('.no-results');
+          if (noResults) noResults.hidden = true;
         });
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
 
       if (tagCloud) {

@@ -7,3 +7,5 @@ data/*.html
 public/*.html
 public/archive/*.html
 .DS_Store
+.agents/
+skills-lock.json
