@@ -15,8 +15,9 @@
 
 - 每天自动抓取多个 RSS 源
 - 按时间窗口和关键词过滤、去重
-- 支持 LLM 自动提炼关键趋势词并生成摘要
+- 支持 LLM 自动提炼关键趋势词并生成摘要（可选，无 key 时回退规则摘要）
 - 生成响应式静态网页（PC / 手机友好）
+- **顶部 Trend Cloud 词云：点击任意词可筛选对应文章**
 - 自动归档历史速报
 - 通过 GitHub Actions 定时部署到 GitHub Pages
 
@@ -90,10 +91,10 @@ us-trend-brief/
 ├── config/sources.yaml           # RSS 源与过滤规则
 ├── src/
 │   ├── fetcher.py                # RSS 抓取
-│   ├── processor.py              # 过滤、分类、标签
+│   ├── processor.py              # 过滤、分类、标签提取
 │   ├── summarizer.py             # LLM / 规则摘要
-│   ├── generator.py              # HTML 生成
-│   └── templates/index.html      # 速报页面模板
+│   ├── generator.py              # HTML / 词云生成
+│   └── templates/index.html      # 速报页面模板（含交互式词云）
 ├── scripts/run_daily.py          # 每日运行入口
 ├── public/                       # GitHub Pages 输出目录
 │   ├── index.html                # 最新速报
