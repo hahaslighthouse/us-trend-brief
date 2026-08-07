@@ -1,5 +1,6 @@
 import json
 import shutil
+from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Union
@@ -51,6 +52,9 @@ class SiteGenerator:
         for a in articles:
             a.published_at_short = self._format_short_date(a.published_at)
 
+        # Build tag cloud data
+        tag_cloud = self._build_tag_cloud(articles)
+
         # Render index.html
         template = self.env.get_template("index.html")
         html = template.render(
@@ -62,6 +66,7 @@ class SiteGenerator:
             groups=groups,
             category_names=CATEGORY_NAMES,
             summary=summary,
+            tag_cloud=tag_cloud,
         )
 
         index_path = self.public_dir / "index.html"
@@ -120,6 +125,25 @@ class SiteGenerator:
 </body>
 </html>"""
         (self.archive_dir / "index.html").write_text(html, encoding="utf-8")
+
+    @staticmethod
+    def _build_tag_cloud(articles: List[Article]) -> List[Dict[str, Any]]:
+        tag_map: Dict[str, List[str]] = defaultdict(list)
+        for a in articles:
+            for tag in a.tags:
+                tag_map[tag].append(a.id)
+        # Sort by count desc, then name
+        sorted_tags = sorted(tag_map.items(), key=lambda x: (-len(x[1]), x[0]))
+        max_count = max((len(ids) for _, ids in sorted_tags), default=1)
+        return [
+            {
+                "name": tag,
+                "count": len(ids),
+                "article_ids": ids,
+                "weight": round(0.75 + 1.25 * (len(ids) / max_count), 2),
+            }
+            for tag, ids in sorted_tags
+        ]
 
     @staticmethod
     def _format_short_date(dt: Optional[datetime]) -> str:

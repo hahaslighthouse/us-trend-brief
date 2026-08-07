@@ -107,6 +107,79 @@ section h2 {
   color: var(--text);
 }
 
+.tag-cloud-section {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: var(--shadow);
+}
+
+.tag-cloud-section .hint {
+  margin: -8px 0 18px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.tag-cloud {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  line-height: 1.4;
+}
+
+.cloud-tag {
+  display: inline-block;
+  background: #f0efec;
+  color: #444;
+  border: none;
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease;
+  line-height: 1.2;
+}
+
+.cloud-tag:hover {
+  background: var(--accent);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+.cloud-tag:active {
+  transform: translateY(0);
+}
+
+.filter-bar {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.filter-bar strong {
+  color: var(--accent);
+}
+
+.clear-filter {
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: var(--muted);
+}
+
+.clear-filter:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 .trend-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -145,6 +218,13 @@ section h2 {
   padding: 4px 10px;
   border-radius: 999px;
   font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.tag:hover {
+  background: var(--accent);
+  color: #fff;
 }
 
 .article-grid {

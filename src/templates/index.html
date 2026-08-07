@@ -26,6 +26,28 @@
       <p class="headline">{{ summary.headline }}</p>
     </section>
 
+    {% if tag_cloud %}
+    <section class="tag-cloud-section">
+      <h2>☁️ Trend Cloud</h2>
+      <p class="hint">Click any term to filter articles</p>
+      <div class="tag-cloud" id="tagCloud">
+        {% for tag in tag_cloud %}
+        <button
+          class="cloud-tag"
+          data-tag="{{ tag.name }}"
+          data-count="{{ tag.count }}"
+          style="font-size: {{ 0.85 + tag.weight * 0.7 }}rem;"
+          title="{{ tag.count }} articles"
+        >{{ tag.name }}</button>
+        {% endfor %}
+      </div>
+      <div class="filter-bar" id="filterBar" hidden>
+        <span>Filtering by: <strong id="filterName"></strong></span>
+        <button class="clear-filter" id="clearFilter">Clear filter</button>
+      </div>
+    </section>
+    {% endif %}
+
     {% if summary.trends %}
     <section class="trends">
       <h2>🔥 Key Trends</h2>
@@ -46,11 +68,11 @@
     {% endif %}
 
     {% for category, items in groups.items() %}
-    <section class="category-section" id="{{ category }}">
+    <section class="category-section" id="{{ category }}" data-category="{{ category }}">
       <h2>{{ category_names.get(category, category.title()) }}</h2>
       <div class="article-grid">
         {% for a in items %}
-        <article class="article-card">
+        <article class="article-card" data-tags="{{ a.tags | join(',') }}">
           {% if a.image_url %}
           <a href="{{ a.link | safe }}" target="_blank" rel="noopener" class="thumb">
             <img src="{{ a.image_url | safe }}" alt="{{ a.title }}" loading="lazy">
@@ -62,7 +84,7 @@
             <p class="summary">{{ summary.article_summaries.get(a.id, a.description) }}</p>
             {% if a.tags %}
             <div class="keywords">
-              {% for tag in a.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+              {% for tag in a.tags %}<span class="tag" data-tag="{{ tag }}">{{ tag }}</span>{% endfor %}
             </div>
             {% endif %}
             <div class="card-footer">
@@ -81,5 +103,77 @@
       <p>Auto-generated daily from RSS sources. Last updated {{ generated_at }}.</p>
     </div>
   </footer>
+
+  <script>
+    (function () {
+      const tagCloud = document.getElementById('tagCloud');
+      const filterBar = document.getElementById('filterBar');
+      const filterName = document.getElementById('filterName');
+      const clearFilter = document.getElementById('clearFilter');
+      const sections = document.querySelectorAll('.category-section');
+      let currentTag = null;
+
+      function setFilter(tag) {
+        currentTag = tag;
+        filterName.textContent = tag;
+        filterBar.hidden = false;
+
+        sections.forEach(section => {
+          const cards = section.querySelectorAll('.article-card');
+          let visibleCount = 0;
+          cards.forEach(card => {
+            const tags = (card.dataset.tags || '').split(',').filter(Boolean);
+            const match = tags.includes(tag);
+            card.hidden = !match;
+            if (match) visibleCount++;
+          });
+          section.hidden = visibleCount === 0;
+        });
+
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      function clear() {
+        currentTag = null;
+        filterBar.hidden = true;
+        sections.forEach(section => {
+          section.hidden = false;
+          section.querySelectorAll('.article-card').forEach(card => {
+            card.hidden = false;
+          });
+        });
+      }
+
+      if (tagCloud) {
+        tagCloud.addEventListener('click', e => {
+          const btn = e.target.closest('.cloud-tag');
+          if (!btn) return;
+          const tag = btn.dataset.tag;
+          if (currentTag === tag) {
+            clear();
+          } else {
+            setFilter(tag);
+          }
+        });
+      }
+
+      document.querySelectorAll('.article-card .tag').forEach(el => {
+        el.addEventListener('click', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          const tag = e.target.dataset.tag;
+          if (currentTag === tag) {
+            clear();
+          } else {
+            setFilter(tag);
+          }
+        });
+      });
+
+      if (clearFilter) {
+        clearFilter.addEventListener('click', clear);
+      }
+    })();
+  </script>
 </body>
 </html>

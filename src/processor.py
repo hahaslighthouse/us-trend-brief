@@ -115,6 +115,22 @@ CANDIDATE_TAGS = [
     "Y2K",
     "Retro",
     "Workwear",
+    "Jewelry",
+    "Bags",
+    "Swimwear",
+    "Back to School",
+    "Nike",
+    "Adidas",
+    "Jordan",
+    "Zara",
+    "H&M",
+    "Beauty",
+    "Makeup",
+    "Watches",
+    "Luxury",
+    "Celebrity Style",
+    "Copenhagen",
+    "Fashion Week",
 ]
 
 
