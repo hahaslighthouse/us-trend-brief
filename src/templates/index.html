@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ site_name }} — {{ date_str }}</title>
+  <meta name="description" content="{{ site_description }}">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1>{{ site_name }}</h1>
+      <p class="subtitle">{{ site_description }}</p>
+      <div class="meta">
+        <span class="date">{{ date_str }}</span>
+        <span class="count">{{ articles|length }} articles</span>
+        <a class="archive-link" href="archive/">Archive</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <h2>📰 Daily Headline</h2>
+      <p class="headline">{{ summary.headline }}</p>
+    </section>
+
+    {% if summary.trends %}
+    <section class="trends">
+      <h2>🔥 Key Trends</h2>
+      <div class="trend-grid">
+        {% for trend in summary.trends %}
+        <article class="trend-card">
+          <h3>{{ trend.name }}</h3>
+          <p>{{ trend.summary }}</p>
+          {% if trend.keywords %}
+          <div class="keywords">
+            {% for kw in trend.keywords %}<span class="tag">{{ kw }}</span>{% endfor %}
+          </div>
+          {% endif %}
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
+    {% for category, items in groups.items() %}
+    <section class="category-section" id="{{ category }}">
+      <h2>{{ category_names.get(category, category.title()) }}</h2>
+      <div class="article-grid">
+        {% for a in items %}
+        <article class="article-card">
+          {% if a.image_url %}
+          <a href="{{ a.link | safe }}" target="_blank" rel="noopener" class="thumb">
+            <img src="{{ a.image_url | safe }}" alt="{{ a.title }}" loading="lazy">
+          </a>
+          {% endif %}
+          <div class="card-body">
+            <div class="source">{{ a.source_name }}</div>
+            <h3><a href="{{ a.link | safe }}" target="_blank" rel="noopener">{{ a.title }}</a></h3>
+            <p class="summary">{{ summary.article_summaries.get(a.id, a.description) }}</p>
+            {% if a.tags %}
+            <div class="keywords">
+              {% for tag in a.tags %}<span class="tag">{{ tag }}</span>{% endfor %}
+            </div>
+            {% endif %}
+            <div class="card-footer">
+              <time>{{ a.published_at_short }}</time>
+            </div>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+    {% endfor %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Auto-generated daily from RSS sources. Last updated {{ generated_at }}.</p>
+    </div>
+  </footer>
+</body>
+</html>

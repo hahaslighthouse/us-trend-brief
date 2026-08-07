@@ -1,0 +1,161 @@
+sources:
+  - name: "WWD"
+    url: "https://wwd.com/feed/"
+    category: "industry"
+    language: "en"
+    enabled: true
+
+  - name: "Business of Fashion"
+    url: "https://www.businessoffashion.com/arc/outboundfeeds/rss/"
+    category: "industry"
+    language: "en"
+    enabled: true
+
+  - name: "Highsnobiety"
+    url: "https://www.highsnobiety.com/feeds/rss"
+    category: "streetwear"
+    language: "en"
+    enabled: true
+
+  - name: "Hypebeast"
+    url: "https://hypebeast.com/feed"
+    category: "streetwear"
+    language: "en"
+    enabled: true
+    allowed_categories:
+      - Fashion
+      - Footwear
+      - Sneakers
+      - Style
+      - Accessories
+      - Luxury
+
+  - name: "Refinery29"
+    url: "https://www.refinery29.com/rss.xml?site=us"
+    category: "womenswear"
+    language: "en"
+    enabled: true
+
+  - name: "Who What Wear"
+    url: "https://www.whowhatwear.com/feeds.xml"
+    category: "womenswear"
+    language: "en"
+    enabled: true
+    allowed_categories:
+      - Fashion
+      - Shopping
+      - Outfit Ideas
+      - Trends
+      - Shoes
+      - Swimwear
+      - Summer
+      - Affordable
+      - Celebrity Style
+
+filters:
+  # 标题或摘要中至少包含一个关键词才收录（不区分大小写）
+  keywords:
+    - trend
+    - trends
+    - trending
+    - fashion
+    - style
+    - runway
+    - streetwear
+    - sneaker
+    - sneakers
+    - collection
+    - designer
+    - brand
+    - luxury
+    - capsule
+    - collaboration
+    - collab
+    - outfit
+    - wardrobe
+    - footwear
+    - apparel
+    - menswear
+    - womenswear
+    - forecast
+    - season
+    - fall
+    - winter
+    - spring
+    - summer
+    - 2025
+    - 2026
+
+  # 标题中必须至少包含一个强相关时尚词（防止综合生活类内容混入）
+  required_in_title:
+    - fashion
+    - style
+    - runway
+    - streetwear
+    - sneaker
+    - sneakers
+    - collection
+    - designer
+    - designers
+    - brand
+    - luxury
+    - capsule
+    - collaboration
+    - collab
+    - outfit
+    - wardrobe
+    - footwear
+    - apparel
+    - menswear
+    - womenswear
+    - trend
+    - trends
+    - trending
+    - look
+    - looks
+    - wear
+    - wearing
+    - dress
+    - denim
+    - leather
+    - knitwear
+    - outerwear
+    - jacket
+    - coat
+    - boot
+    - boots
+    - bag
+    - bags
+    - accessory
+    - accessories
+    - jewelry
+    - watch
+    - watches
+    - sunglasses
+    - eyewear
+    - fragrance
+    - beauty
+    - makeup
+    - skincare
+    - perfume
+
+  # 标题中包含这些词则排除
+  exclude:
+    - "sale"
+    - "discount"
+    - "coupon"
+    - "shopping deal"
+    - "advertisement"
+    - "sponsored"
+
+settings:
+  # 只保留最近 N 小时的文章
+  lookback_hours: 48
+  # 每天最多从每个源收录多少篇
+  max_per_source: 15
+  # 时区
+  timezone: "America/New_York"
+  # 站点名称
+  site_name: "US Trend Brief"
+  # 站点描述
+  site_description: "Daily digest of US fashion trends from industry and streetwear sources."
